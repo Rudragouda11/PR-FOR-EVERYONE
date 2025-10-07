@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PR Marketplace</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>PR Marketplace</h1>
+    <p>Agents submit campaigns, customers browse PR services</p>
+  </header>
+
+  <main>
+    <section id="agent-form-section">
+      <h2>Submit Your PR Campaign</h2>
+      <form id="agentForm">
+        <input type="text" id="agentName" placeholder="Agent / Company Name" required /><br/>
+        <input type="text" id="campaignTitle" placeholder="Campaign / Service Name" required /><br/>
+        <textarea id="campaignDesc" placeholder="Description / Reach" required></textarea><br/>
+        <input type="number" id="campaignPrice" placeholder="Price" required /><br/>
+        <input type="text" id="contactInfo" placeholder="Contact Info (Email/Phone)" required /><br/>
+        <input type="file" id="campaignImage" accept="image/*" /><br/>
+        <button type="submit">Submit Campaign</button>
+      </form>
+    </section>
+
+    <section id="campaigns-section">
+      <h2>Available PR Campaigns</h2>
+      <div id="campaignsContainer">
+        <!-- Campaign cards will appear here -->
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
