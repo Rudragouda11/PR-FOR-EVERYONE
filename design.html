@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PR for Everyone - Design Preview</title>
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Global */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+    body { background: #0d1117; color: #fff; }
+
+    /* Navbar */
+    nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 15px 50px; background: rgba(10,10,10,0.85);
+      position: sticky; top: 0; z-index: 1000;
+    }
+    nav .logo { font-size: 24px; font-weight: 700; background: linear-gradient(90deg,#5865F2,#FF5ACD); -webkit-background-clip: text; color: transparent; }
+    nav .btn { padding: 10px 25px; border-radius: 25px; background: linear-gradient(90deg,#5865F2,#FF5ACD); border: none; color: white; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+    nav .btn:hover { box-shadow: 0 0 15px #FF5ACD, 0 0 25px #5865F2; transform: translateY(-2px); }
+
+    /* Hero */
+    .hero { text-align: center; padding: 100px 20px; }
+    .hero h1 { font-size: 60px; margin-bottom: 20px; background: linear-gradient(90deg,#5865F2,#FF5ACD); -webkit-background-clip: text; color: transparent; }
+    .hero p { font-size: 20px; margin-bottom: 30px; color: #aaa; }
+    .hero .cta { padding: 15px 35px; font-size: 18px; border-radius: 30px; background: linear-gradient(90deg,#5865F2,#FF5ACD); border: none; color: white; cursor: pointer; transition: all 0.3s ease; }
+    .hero .cta:hover { box-shadow: 0 0 20px #FF5ACD, 0 0 30px #5865F2; transform: translateY(-3px); }
+
+    /* Features Section */
+    .features { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; padding: 50px 20px; }
+    .card {
+      background: rgba(255,255,255,0.05); backdrop-filter: blur(10px);
+      border-radius: 20px; padding: 30px; width: 280px; text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card:hover { transform: translateY(-10px); box-shadow: 0 0 20px #FF5ACD, 0 0 30px #5865F2; }
+    .card h3 { font-size: 22px; margin-bottom: 15px; }
+    .card p { font-size: 16px; color: #ccc; }
+
+    /* Footer */
+    footer { text-align: center; padding: 30px 20px; color: #666; font-size: 14px; }
+    
+    /* Responsive */
+    @media(max-width: 900px){ .features { flex-direction: column; align-items: center; } }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav>
+    <div class="logo">PR for Everyone</div>
+    <button class="btn">List Your PR Service</button>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>PR for Everyone</h1>
+    <p>Connect with top PR agencies, explore services, and grow your reach.</p>
+    <button class="cta">Get Started</button>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features">
+    <div class="card">
+      <h3>Easy Listing</h3>
+      <p>Agents can quickly list their PR campaigns with details and images.</p>
+    </div>
+    <div class="card">
+      <h3>Explore Services</h3>
+      <p>Customers can browse PR services and find the right fit for them.</p>
+    </div>
+    <div class="card">
+      <h3>Secure & Modern</h3>
+      <p>All data is securely stored and displayed in a sleek, modern interface.</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 PR for Everyone. All rights reserved.
+  </footer>
+</body>
+</html>
