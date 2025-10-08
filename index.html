@@ -107,7 +107,7 @@
         }
       });
 
-      // Dynamic Listings Display (KEEP ORIGINAL LOGIC)
+      // Dynamic Listings Display
       const q = query(collection(db, "pr_listings"), orderBy("timestamp", "desc"));
       onSnapshot(q, (snapshot) => {
         listingsContainer.innerHTML = "";
@@ -116,24 +116,62 @@
           const card = document.createElement('div');
           card.className = "card listing-card";
 
-          // Logo fallback
-          const logoContent = data.logoURL ? 
-            `<img src="${data.logoURL}" alt="Logo" class="logo-img">` :
-            `<span>${data.name.charAt(0).toUpperCase()}</span>`;
+          // Logo element
+          const logoCircle = document.createElement('div');
+          logoCircle.className = "logo-circle";
+          if(data.logoURL){
+            const img = document.createElement('img');
+            img.src = data.logoURL;
+            img.alt = "Logo";
+            img.className = "logo-img";
+            logoCircle.appendChild(img);
+          } else {
+            logoCircle.textContent = data.name.charAt(0).toUpperCase();
+          }
+          card.appendChild(logoCircle);
 
-          // Keep old display + add share & like safely
-          card.innerHTML = `
-            <div class="logo-circle">${logoContent}</div>
-            <h3>${data.name}</h3>
-            <p><strong>Reach:</strong> ${data.reach}</p>
-            <p><strong>Price / Commission:</strong> ${data.price}</p>
-            <p>${data.description}</p>
-            <div style="margin-top:10px; display:flex; justify-content:center; gap:15px;">
-              <button class="share-btn" onclick="shareListing('${data.name}')">Share 🔗</button>
-              <button class="like-btn" onclick="likeListing('${docItem.id}', this.nextElementSibling)">Like ❤️</button>
-              <span>${data.likes || 0}</span>
-            </div>
-          `;
+          // Rest of card content
+          const nameH3 = document.createElement('h3');
+          nameH3.textContent = data.name;
+          card.appendChild(nameH3);
+
+          const reachP = document.createElement('p');
+          reachP.innerHTML = `<strong>Reach:</strong> ${data.reach}`;
+          card.appendChild(reachP);
+
+          const priceP = document.createElement('p');
+          priceP.innerHTML = `<strong>Price / Commission:</strong> ${data.price}`;
+          card.appendChild(priceP);
+
+          const descP = document.createElement('p');
+          descP.textContent = data.description;
+          card.appendChild(descP);
+
+          // Like & Share buttons
+          const btnDiv = document.createElement('div');
+          btnDiv.style.marginTop = "10px";
+          btnDiv.style.display = "flex";
+          btnDiv.style.justifyContent = "center";
+          btnDiv.style.gap = "15px";
+
+          const shareBtn = document.createElement('button');
+          shareBtn.className = "share-btn";
+          shareBtn.textContent = "Share 🔗";
+          shareBtn.onclick = ()=>shareListing(data.name);
+          btnDiv.appendChild(shareBtn);
+
+          const likeBtn = document.createElement('button');
+          likeBtn.className = "like-btn";
+          likeBtn.textContent = "Like ❤️";
+          btnDiv.appendChild(likeBtn);
+
+          const likesSpan = document.createElement('span');
+          likesSpan.textContent = data.likes || 0;
+          likeBtn.onclick = ()=>likeListing(docItem.id, likesSpan);
+          btnDiv.appendChild(likesSpan);
+
+          card.appendChild(btnDiv);
+
           listingsContainer.appendChild(card);
         });
       });
@@ -171,36 +209,23 @@
 </head>
 <body>
 
-  <!-- Navbar -->
   <nav>
     <div class="logo">PR for Everyone</div>
     <button class="btn">List Your PR Service</button>
   </nav>
 
-  <!-- Hero -->
   <section class="hero">
     <h1>PR for Everyone</h1>
     <p>Connect with top PR agencies, explore services, and grow your reach.</p>
     <button class="cta">Get Started</button>
   </section>
 
-  <!-- Features -->
   <section class="features">
-    <div class="card">
-      <h3>Easy Listing</h3>
-      <p>Agents can quickly list their PR campaigns with details.</p>
-    </div>
-    <div class="card">
-      <h3>Explore Services</h3>
-      <p>Customers can browse PR services and find the right fit.</p>
-    </div>
-    <div class="card">
-      <h3>Secure & Modern</h3>
-      <p>All data is securely stored and displayed in a sleek interface.</p>
-    </div>
+    <div class="card"><h3>Easy Listing</h3><p>Agents can quickly list their PR campaigns with details.</p></div>
+    <div class="card"><h3>Explore Services</h3><p>Customers can browse PR services and find the right fit.</p></div>
+    <div class="card"><h3>Secure & Modern</h3><p>All data is securely stored and displayed in a sleek interface.</p></div>
   </section>
 
-  <!-- Agent Form -->
   <section class="form-section">
     <h2 style="text-align:center; margin-bottom:30px; font-size:32px;">List Your PR Service</h2>
     <form id="agentForm" style="max-width:600px; margin:0 auto; display:flex; flex-direction:column; gap:15px;">
@@ -214,13 +239,9 @@
     <p id="successMessage" style="text-align:center; margin-top:15px; color:#4caf50; display:none;">Your listing was submitted!</p>
   </section>
 
-  <!-- Listings Container -->
   <section id="listingsContainer"></section>
 
-  <!-- Footer -->
-  <footer style="text-align:center; padding:20px; color:#777;">
-    &copy; 2025 PR for Everyone. All rights reserved.
-  </footer>
+  <footer style="text-align:center; padding:20px; color:#777;">&copy; 2025 PR for Everyone. All rights reserved.</footer>
 
 </body>
 </html>
