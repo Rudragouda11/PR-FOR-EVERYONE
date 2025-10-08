@@ -11,13 +11,14 @@
   <!-- Firebase SDKs -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-storage.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBKVPXz4_30DCFXgP6aEFZ_wn86GS0bSqQ",
       authDomain: "pr-for-everyone.firebaseapp.com",
       projectId: "pr-for-everyone",
-      storageBucket: "pr-for-everyone.firebasestorage.app",
+      storageBucket: "pr-for-everyone.appspot.com",
       messagingSenderId: "90365098207",
       appId: "1:90365098207:web:c6988b51816a8610fa116a",
       measurementId: "G-ETGHRSCJMD"
@@ -25,6 +26,7 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const storage = getStorage(app);
 
     window.addEventListener('DOMContentLoaded', () => {
       const form = document.getElementById('agentForm');
@@ -39,27 +41,37 @@
         submitBtn.textContent = "Submitting...";
 
         const name = document.getElementById('name').value.trim();
-        const reach = document.getElementById('reach').value.trim();
+        const reach = document.getElementById('reach').value.trim() || "Not specified";
         const price = document.getElementById('price').value.trim();
         const description = document.getElementById('description').value.trim();
+        const logoFile = document.getElementById('logo').files[0];
 
         if(!name || !price || !description){
-          alert("Please fill all required fields (Company, Price, Description)!");
+          alert("Please fill all required fields!");
           submitBtn.disabled = false;
           submitBtn.textContent = "Submit Listing";
           return;
         }
 
         try {
+          let logoURL = null;
+          if(logoFile){
+            const storageRef = ref(storage, 'logos/' + Date.now() + '_' + logoFile.name);
+            const snapshot = await uploadBytes(storageRef, logoFile);
+            logoURL = await getDownloadURL(snapshot.ref);
+          }
+
           await addDoc(collection(db, "pr_listings"), {
             name,
-            reach: reach || "Not specified",
+            reach,
             price,
             description,
-            timestamp: new Date()
+            logoURL,
+            timestamp: serverTimestamp()
           });
+
           successMsg.style.display = "block";
-          setTimeout(() => successMsg.style.display = "none", 3000);
+          setTimeout(()=>{successMsg.style.display = "none";},3000);
           form.reset();
         } catch (error) {
           alert("Error submitting listing: " + error.message);
@@ -69,25 +81,24 @@
         }
       });
 
-      // Dynamic Listings Display with animations
+      // Dynamic Listings Display
       const q = query(collection(db, "pr_listings"), orderBy("timestamp", "desc"));
       onSnapshot(q, (snapshot) => {
         listingsContainer.innerHTML = "";
         snapshot.forEach(doc => {
           const data = doc.data();
           const card = document.createElement('div');
-          card.className = "card listing-card animate-card";
-          const firstLetter = data.name.charAt(0).toUpperCase();
+          card.className = "card listing-card";
+          const logoContent = data.logoURL ? 
+            `<img src="${data.logoURL}" alt="Logo" class="logo-img">` : 
+            `<span>${data.name.charAt(0).toUpperCase()}</span>`;
+
           card.innerHTML = `
-            <div class="logo-circle">${firstLetter}</div>
+            <div class="logo-circle">${logoContent}</div>
             <h3>${data.name}</h3>
-            ${data.reach ? `<p><strong>Reach:</strong> ${data.reach}</p>` : ""}
+            <p><strong>Reach:</strong> ${data.reach}</p>
             <p><strong>Price / Commission:</strong> ${data.price}</p>
             <p>${data.description}</p>
-            <div class="social-icons">
-              <span class="share">🔗 Share</span>
-              <span class="like">❤️ Like</span>
-            </div>
           `;
           listingsContainer.appendChild(card);
         });
@@ -97,41 +108,39 @@
 
   <style>
     * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
-    body { background:#0d1117; color:#fff; }
+    body { background:#0d1117; color:#fff; overflow-x:hidden; }
+
+    /* Particle background */
+    body::before {
+      content:""; position:fixed; top:0; left:0; width:100%; height:100%;
+      background:radial-gradient(circle,#1a1a1a 0%,#0d1117 100%);
+      z-index:-1;
+    }
 
     /* Navbar */
-    nav { display:flex; justify-content:space-between; align-items:center; padding:15px 50px; background:rgba(10,10,10,0.95); position:sticky; top:0; z-index:1000; backdrop-filter:blur(10px);}
+    nav { display:flex; justify-content:space-between; align-items:center; padding:15px 50px; background:rgba(10,10,10,0.85); position:sticky; top:0; z-index:1000; }
     nav .logo { font-size:24px; font-weight:700; background:linear-gradient(90deg,#5865F2,#FF5ACD); -webkit-background-clip:text; color:transparent; }
     nav .btn { padding:10px 25px; border-radius:25px; background:linear-gradient(90deg,#5865F2,#FF5ACD); border:none; color:white; font-weight:600; cursor:pointer; transition:all 0.3s ease; }
     nav .btn:hover { box-shadow:0 0 15px #FF5ACD,0 0 25px #5865F2; transform:translateY(-2px); }
 
     /* Hero */
-    .hero { text-align:center; padding:100px 20px; }
-    .hero h1 { font-size:60px; margin-bottom:20px; background:linear-gradient(90deg,#5865F2,#FF5ACD); -webkit-background-clip:text; color:transparent; animation: gradientShift 5s infinite alternate; }
+    .hero { text-align:center; padding:100px 20px; position:relative; }
+    .hero h1 { font-size:60px; margin-bottom:20px; background:linear-gradient(90deg,#5865F2,#FF5ACD); -webkit-background-clip:text; color:transparent; }
     .hero p { font-size:20px; margin-bottom:30px; color:#aaa; }
     .hero .cta { padding:15px 35px; font-size:18px; border-radius:30px; background:linear-gradient(90deg,#5865F2,#FF5ACD); border:none; color:white; cursor:pointer; transition:all 0.3s ease; }
     .hero .cta:hover { box-shadow:0 0 20px #FF5ACD,0 0 30px #5865F2; transform:translateY(-3px); }
 
-    @keyframes gradientShift {
-      0% {background-position:0% 50%;}
-      100% {background-position:100% 50%;}
-    }
-
     /* Features */
     .features { display:flex; flex-wrap:wrap; justify-content:center; gap:30px; padding:50px 20px; }
-    .card { background:rgba(255,255,255,0.05); backdrop-filter:blur(10px); border-radius:20px; padding:30px; width:360px; text-align:center; transition:transform 0.3s, box-shadow 0.3s; position:relative; }
-    .card:hover { transform:translateY(-10px); box-shadow:0 0 20px #FF5ACD,0 0 30px #5865F2; }
+    .card { background:rgba(255,255,255,0.05); backdrop-filter:blur(10px); border-radius:20px; padding:30px; width:360px; text-align:center; transition:transform 0.3s, box-shadow 0.3s; }
+    .card:hover { transform:translateY(-10px) rotateX(2deg) rotateY(2deg); box-shadow:0 0 20px #FF5ACD,0 0 30px #5865F2; }
+
     .card h3 { font-size:22px; margin-bottom:15px; }
     .card p { font-size:16px; color:#ccc; }
-    .animate-card { animation: fadeInUp 0.6s ease forwards; opacity:0; }
-    @keyframes fadeInUp { from {opacity:0; transform:translateY(20px);} to {opacity:1; transform:translateY(0);} }
 
     /* Logo Circle */
-    .logo-circle { width:60px; height:60px; border-radius:50%; background:linear-gradient(90deg,#5865F2,#FF5ACD); display:flex; align-items:center; justify-content:center; font-size:28px; font-weight:700; margin:0 auto 15px auto; color:#fff; }
-
-    /* Social icons */
-    .social-icons { display:flex; justify-content:center; gap:10px; margin-top:10px; font-size:18px; cursor:pointer; color:#aaa; transition:all 0.3s ease; }
-    .social-icons span:hover { color:#fff; transform:scale(1.2); }
+    .logo-circle { width:60px; height:60px; border-radius:50%; background:linear-gradient(90deg,#5865F2,#FF5ACD); display:flex; align-items:center; justify-content:center; font-size:28px; font-weight:700; margin:0 auto 15px auto; color:#fff; overflow:hidden; }
+    .logo-circle img.logo-img { width:100%; height:100%; object-fit:cover; }
 
     /* Form */
     .form-section { padding:50px 20px; }
@@ -186,6 +195,7 @@
       <input type="text" id="reach" placeholder="Reach (Instagram, YouTube, Blogs...) - optional">
       <input type="text" id="price" placeholder="Approx Price / Commission" required>
       <textarea id="description" placeholder="Short Description" required rows="4"></textarea>
+      <input type="file" id="logo" accept="image/*">
       <button type="submit" id="submitBtn">Submit Listing</button>
     </form>
     <p id="successMessage" style="text-align:center; margin-top:15px; color:#4caf50; display:none;">Your listing was submitted!</p>
