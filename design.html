@@ -4,8 +4,58 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PR for Everyone - Design Preview</title>
+
   <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Firebase SDKs -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBKVPXz4_30DCFXgP6aEFZ_wn86GS0bSqQ",
+      authDomain: "pr-for-everyone.firebaseapp.com",
+      projectId: "pr-for-everyone",
+      storageBucket: "pr-for-everyone.firebasestorage.app",
+      messagingSenderId: "90365098207",
+      appId: "1:90365098207:web:c6988b51816a8610fa116a",
+      measurementId: "G-ETGHRSCJMD"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Form submission
+    window.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('agentForm');
+      const successMsg = document.getElementById('successMessage');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('name').value;
+        const reach = document.getElementById('reach').value;
+        const price = document.getElementById('price').value;
+        const description = document.getElementById('description').value;
+
+        try {
+          await addDoc(collection(db, "pr_listings"), {
+            name,
+            reach,
+            price,
+            description,
+            timestamp: new Date()
+          });
+          successMsg.style.display = "block";
+          form.reset();
+        } catch (error) {
+          alert("Error submitting listing: " + error.message);
+        }
+      });
+    });
+  </script>
+
   <style>
     /* Global */
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
@@ -39,14 +89,22 @@
     .card h3 { font-size: 22px; margin-bottom: 15px; }
     .card p { font-size: 16px; color: #ccc; }
 
+    /* Form Section */
+    .form-section { padding:50px 20px; }
+    .form-section input, .form-section textarea { transition: all 0.3s ease; padding:12px; border-radius:10px; border:none; background:#1a1a1a; color:#fff; }
+    .form-section input:focus, .form-section textarea:focus { outline:none; box-shadow: 0 0 10px #FF5ACD; background:#222; }
+    .form-section button { padding:15px; border-radius:30px; border:none; background:linear-gradient(90deg,#5865F2,#FF5ACD); color:#fff; cursor:pointer; font-weight:600; transition: all 0.3s ease; }
+    .form-section button:hover { box-shadow:0 0 20px #FF5ACD, 0 0 30px #5865F2; transform: translateY(-2px); }
+
     /* Footer */
     footer { text-align: center; padding: 30px 20px; color: #666; font-size: 14px; }
-    
+
     /* Responsive */
     @media(max-width: 900px){ .features { flex-direction: column; align-items: center; } }
   </style>
 </head>
 <body>
+
   <!-- Navbar -->
   <nav>
     <div class="logo">PR for Everyone</div>
@@ -74,6 +132,19 @@
       <h3>Secure & Modern</h3>
       <p>All data is securely stored and displayed in a sleek, modern interface.</p>
     </div>
+  </section>
+
+  <!-- Agent / Influencer Listing Form -->
+  <section class="form-section">
+    <h2 style="text-align:center; margin-bottom:30px; font-size:32px;">List Your PR Service</h2>
+    <form id="agentForm" style="max-width:600px; margin:0 auto; display:flex; flex-direction:column; gap:15px;">
+      <input type="text" id="name" placeholder="Company / Influencer Name" required>
+      <input type="text" id="reach" placeholder="Reach (Instagram, YouTube, Blogs...)" required>
+      <input type="text" id="price" placeholder="Approx Price / Commission" required>
+      <textarea id="description" placeholder="Short Description" required rows="4"></textarea>
+      <button type="submit">Submit Listing</button>
+    </form>
+    <p id="successMessage" style="text-align:center; margin-top:15px; color:#4caf50; display:none;">Your listing was submitted!</p>
   </section>
 
   <!-- Footer -->
