@@ -26,79 +26,79 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-   window.addEventListener('DOMContentLoaded', () => {
-  const form = document.getElementById('agentForm');
-  const successMsg = document.getElementById('successMessage');
-  const submitBtn = document.getElementById('submitBtn');
-  const listingsContainer = document.getElementById('listingsContainer');
+    window.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('agentForm');
+      const successMsg = document.getElementById('successMessage');
+      const submitBtn = document.getElementById('submitBtn');
+      const listingsContainer = document.getElementById('listingsContainer');
 
-  // Create inline error message
-  const errorMsg = document.createElement('p');
-  errorMsg.style.textAlign = 'center';
-  errorMsg.style.color = '#ff4c4c';
-  errorMsg.style.marginTop = '10px';
-  errorMsg.style.display = 'none';
-  form.appendChild(errorMsg);
+      // Inline error message
+      const errorMsg = document.createElement('p');
+      errorMsg.style.textAlign = 'center';
+      errorMsg.style.color = '#ff4c4c';
+      errorMsg.style.marginTop = '10px';
+      errorMsg.style.display = 'none';
+      form.appendChild(errorMsg);
 
-  // Form Submission
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    submitBtn.disabled = true;
-    submitBtn.textContent = "Submitting...";
-    errorMsg.style.display = 'none'; // reset previous error
+      // Form Submission
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Submitting...";
+        errorMsg.style.display = 'none';
 
-    const name = document.getElementById('name').value.trim();
-    const reach = document.getElementById('reach').value.trim();
-    const price = document.getElementById('price').value.trim();
-    const description = document.getElementById('description').value.trim();
+        const name = document.getElementById('name').value.trim();
+        const reach = document.getElementById('reach').value.trim();
+        const price = document.getElementById('price').value.trim();
+        const description = document.getElementById('description').value.trim();
 
-    if(!name || !reach || !price || !description){
-      errorMsg.textContent = "Please fill all fields!";
-      errorMsg.style.display = 'block';
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Submit Listing";
-      return;
-    }
+        if(!name || !price || !description){
+          errorMsg.textContent = "Please fill all required fields!";
+          errorMsg.style.display = 'block';
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Submit Listing";
+          return;
+        }
 
-    try {
-      await addDoc(collection(db, "pr_listings"), {
-        name,
-        reach,
-        price,
-        description,
-        timestamp: new Date()
+        try {
+          await addDoc(collection(db, "pr_listings"), {
+            name,
+            reach: reach || "N/A",
+            price,
+            description,
+            timestamp: new Date()
+          });
+          successMsg.style.display = "block";
+          form.reset();
+        } catch (error) {
+          errorMsg.textContent = "Error submitting listing: " + error.message;
+          errorMsg.style.display = 'block';
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Submit Listing";
+        }
       });
-      successMsg.style.display = "block";
-      form.reset();
-    } catch (error) {
-      errorMsg.textContent = "Error submitting listing: " + error.message;
-      errorMsg.style.display = 'block';
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Submit Listing";
-    }
-  });
 
-  // Dynamic Listings Display
-  const q = query(collection(db, "pr_listings"), orderBy("timestamp", "desc"));
-  onSnapshot(q, (snapshot) => {
-    listingsContainer.innerHTML = "";
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      const card = document.createElement('div');
-      card.className = "card listing-card";
-      const firstLetter = data.name.charAt(0).toUpperCase();
-      card.innerHTML = `
-        <div class="logo-circle">${firstLetter}</div>
-        <h3>${data.name}</h3>
-        <p><strong>Reach:</strong> ${data.reach}</p>
-        <p><strong>Price / Commission:</strong> ${data.price}</p>
-        <p>${data.description}</p>
-      `;
-      listingsContainer.appendChild(card);
+      // Display Listings
+      const q = query(collection(db, "pr_listings"), orderBy("timestamp", "desc"));
+      onSnapshot(q, (snapshot) => {
+        listingsContainer.innerHTML = "";
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const card = document.createElement('div');
+          card.className = "card listing-card";
+          const firstLetter = data.name.charAt(0).toUpperCase();
+          card.innerHTML = `
+            <div class="logo-circle">${firstLetter}</div>
+            <h3>${data.name}</h3>
+            ${data.reach && data.reach !== "N/A" ? `<p><strong>Reach:</strong> ${data.reach}</p>` : ""}
+            <p><strong>Price / Commission:</strong> ${data.price}</p>
+            <p>${data.description}</p>
+          `;
+          listingsContainer.appendChild(card);
+        });
+      });
     });
-  });
-});
   </script>
 
   <style>
@@ -120,7 +120,7 @@
 
     /* Features */
     .features { display:flex; flex-wrap:wrap; justify-content:center; gap:30px; padding:50px 20px; }
-    .card { background:rgba(255,255,255,0.05); backdrop-filter:blur(10px); border-radius:20px; padding:30px; width:340px; text-align:center; transition:transform 0.3s, box-shadow 0.3s; }
+    .card { background:rgba(255,255,255,0.05); backdrop-filter:blur(10px); border-radius:20px; padding:30px; width:380px; text-align:center; transition:transform 0.3s, box-shadow 0.3s; }
     .card:hover { transform:translateY(-10px); box-shadow:0 0 20px #FF5ACD,0 0 30px #5865F2; }
     .card h3 { font-size:22px; margin-bottom:15px; }
     .card p { font-size:16px; color:#ccc; }
@@ -178,7 +178,7 @@
     <h2 style="text-align:center; margin-bottom:30px; font-size:32px;">List Your PR Service</h2>
     <form id="agentForm" style="max-width:600px; margin:0 auto; display:flex; flex-direction:column; gap:15px;">
       <input type="text" id="name" placeholder="Company / Influencer Name" required>
-      <input type="text" id="reach" placeholder="Reach (Instagram, YouTube, Blogs...)" required>
+      <input type="text" id="reach" placeholder="Reach (Instagram, YouTube, Blogs...)">
       <input type="text" id="price" placeholder="Approx Price / Commission" required>
       <textarea id="description" placeholder="Short Description" required rows="4"></textarea>
       <button type="submit" id="submitBtn">Submit Listing</button>
