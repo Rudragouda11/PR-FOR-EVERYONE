@@ -26,68 +26,79 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    window.addEventListener('DOMContentLoaded', () => {
-      const form = document.getElementById('agentForm');
-      const successMsg = document.getElementById('successMessage');
-      const submitBtn = document.getElementById('submitBtn');
-      const listingsContainer = document.getElementById('listingsContainer');
+   window.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('agentForm');
+  const successMsg = document.getElementById('successMessage');
+  const submitBtn = document.getElementById('submitBtn');
+  const listingsContainer = document.getElementById('listingsContainer');
 
-      // Form Submission
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Submitting...";
+  // Create inline error message
+  const errorMsg = document.createElement('p');
+  errorMsg.style.textAlign = 'center';
+  errorMsg.style.color = '#ff4c4c';
+  errorMsg.style.marginTop = '10px';
+  errorMsg.style.display = 'none';
+  form.appendChild(errorMsg);
 
-        const name = document.getElementById('name').value.trim();
-        const reach = document.getElementById('reach').value.trim();
-        const price = document.getElementById('price').value.trim();
-        const description = document.getElementById('description').value.trim();
+  // Form Submission
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Submitting...";
+    errorMsg.style.display = 'none'; // reset previous error
 
-        if(!name || !reach || !price || !description){
-          alert("Please fill all fields!");
-          submitBtn.disabled = false;
-          submitBtn.textContent = "Submit Listing";
-          return;
-        }
+    const name = document.getElementById('name').value.trim();
+    const reach = document.getElementById('reach').value.trim();
+    const price = document.getElementById('price').value.trim();
+    const description = document.getElementById('description').value.trim();
 
-        try {
-          await addDoc(collection(db, "pr_listings"), {
-            name,
-            reach,
-            price,
-            description,
-            timestamp: new Date()
-          });
-          successMsg.style.display = "block";
-          form.reset();
-        } catch (error) {
-          alert("Error submitting listing: " + error.message);
-        } finally {
-          submitBtn.disabled = false;
-          submitBtn.textContent = "Submit Listing";
-        }
+    if(!name || !reach || !price || !description){
+      errorMsg.textContent = "Please fill all fields!";
+      errorMsg.style.display = 'block';
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Submit Listing";
+      return;
+    }
+
+    try {
+      await addDoc(collection(db, "pr_listings"), {
+        name,
+        reach,
+        price,
+        description,
+        timestamp: new Date()
       });
+      successMsg.style.display = "block";
+      form.reset();
+    } catch (error) {
+      errorMsg.textContent = "Error submitting listing: " + error.message;
+      errorMsg.style.display = 'block';
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Submit Listing";
+    }
+  });
 
-      // Dynamic Listings Display
-      const q = query(collection(db, "pr_listings"), orderBy("timestamp", "desc"));
-      onSnapshot(q, (snapshot) => {
-        listingsContainer.innerHTML = "";
-        snapshot.forEach(doc => {
-          const data = doc.data();
-          const card = document.createElement('div');
-          card.className = "card listing-card";
-          const firstLetter = data.name.charAt(0).toUpperCase();
-          card.innerHTML = `
-            <div class="logo-circle">${firstLetter}</div>
-            <h3>${data.name}</h3>
-            <p><strong>Reach:</strong> ${data.reach}</p>
-            <p><strong>Price / Commission:</strong> ${data.price}</p>
-            <p>${data.description}</p>
-          `;
-          listingsContainer.appendChild(card);
-        });
-      });
+  // Dynamic Listings Display
+  const q = query(collection(db, "pr_listings"), orderBy("timestamp", "desc"));
+  onSnapshot(q, (snapshot) => {
+    listingsContainer.innerHTML = "";
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      const card = document.createElement('div');
+      card.className = "card listing-card";
+      const firstLetter = data.name.charAt(0).toUpperCase();
+      card.innerHTML = `
+        <div class="logo-circle">${firstLetter}</div>
+        <h3>${data.name}</h3>
+        <p><strong>Reach:</strong> ${data.reach}</p>
+        <p><strong>Price / Commission:</strong> ${data.price}</p>
+        <p>${data.description}</p>
+      `;
+      listingsContainer.appendChild(card);
     });
+  });
+});
   </script>
 
   <style>
