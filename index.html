@@ -308,7 +308,7 @@
 
   <footer>© 2025 PR for Everyone. All rights reserved.</footer>
 
-  <!-- Firebase Script (logic retained) -->
+  <!-- Firebase Script (logic retained, improved reset) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
     import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
@@ -356,7 +356,7 @@
       }
     };
 
-    // FORM SUBMIT
+    // FORM SUBMIT (improved reset logic)
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
       submitBtn.disabled = true;
@@ -366,7 +366,8 @@
       const reach = document.getElementById("reach").value.trim() || "Not specified";
       const price = document.getElementById("price").value.trim();
       const description = document.getElementById("description").value.trim();
-      const logoFile = document.getElementById("logo").files[0];
+      const logoFileInput = document.getElementById("logo");
+      const logoFile = logoFileInput.files[0];
 
       if (!name || !price || !description) {
         alert("Please fill all required fields!");
@@ -387,13 +388,21 @@
           name, reach, price, description, logoURL, likes: 0, createdAt: serverTimestamp()
         });
 
+        // Reset all fields after success
+        console.log("Resetting form after successful submit...");
         form.reset();
+        logoFileInput.value = ""; // Explicitly clear the file input
         successMsg.style.display = "block";
         setTimeout(() => successMsg.style.display = "none", 2000);
+
       } catch (err) {
         console.error("Error adding listing:", err);
-        successMsg.style.display = "none";
         alert("An error occurred while adding your listing. Please try again!");
+        // Reset all fields after error
+        console.log("Resetting form after error...");
+        form.reset();
+        logoFileInput.value = ""; // Explicitly clear the file input
+        successMsg.style.display = "none";
       }
 
       submitBtn.disabled = false;
