@@ -6,7 +6,6 @@
   <title>PR for Everyone</title>
   <style>
     @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
-
     /* ===== Base Styles ===== */
     body {
       margin: 0;
@@ -15,9 +14,7 @@
       background: #f0f2f8;
       color: #222;
     }
-
     a { text-decoration: none; color: inherit; }
-
     /* ===== Header ===== */
     header {
       position: sticky;
@@ -31,7 +28,6 @@
       box-shadow: 0 4px 20px rgba(0,0,0,0.08);
       z-index: 100;
     }
-
     /* ===== Hero Section ===== */
     .hero {
       display: flex;
@@ -44,7 +40,6 @@
       position: relative;
       padding: 2rem 1rem;
     }
-
     .hero::after {
       content: '';
       position: absolute;
@@ -52,14 +47,12 @@
       background: linear-gradient(to bottom right, rgba(0,0,0,0.4), rgba(0,0,0,0.2));
       z-index: 0;
     }
-
     .hero-content {
       position: relative;
       z-index: 1;
       color: #fff;
       max-width: 700px;
     }
-
     .hero h1 {
       font-size: 3rem;
       margin-bottom: 1rem;
@@ -67,14 +60,12 @@
       font-weight: 700;
       text-shadow: 0 4px 15px rgba(0,0,0,0.4);
     }
-
     .hero p {
       font-size: 1.2rem;
       margin-bottom: 2rem;
       line-height: 1.5;
       text-shadow: 0 2px 8px rgba(0,0,0,0.3);
     }
-
     .cta {
       background: linear-gradient(135deg, #ff416c, #ff4b2b);
       color: #fff;
@@ -87,12 +78,10 @@
       transition: all 0.3s ease;
       box-shadow: 0 10px 25px rgba(255,65,108,0.3);
     }
-
     .cta:hover {
       transform: translateY(-5px) scale(1.05);
       box-shadow: 0 15px 35px rgba(255,65,108,0.4);
     }
-
     /* ===== Features Section ===== */
     .features {
       display: flex;
@@ -102,7 +91,6 @@
       padding: 4rem 1rem;
       background: #fff;
     }
-
     .feature-card {
       background: #f9f9ff;
       border-radius: 20px;
@@ -114,23 +102,19 @@
       position: relative;
       overflow: hidden;
     }
-
     .feature-card:hover {
       transform: translateY(-12px);
       box-shadow: 0 20px 50px rgba(0,0,0,0.1);
     }
-
     .feature-card h3 {
       font-size: 1.4rem;
       color: #ff416c;
       margin-bottom: 0.8rem;
     }
-
     .feature-card p {
       color: #555;
       font-size: 1rem;
     }
-
     .feature-icon {
       font-size: 3rem;
       margin-bottom: 1rem;
@@ -138,12 +122,10 @@
       color: #ff416c;
       animation: float 2s ease-in-out infinite alternate;
     }
-
     @keyframes float {
       0% { transform: translateY(0); }
       100% { transform: translateY(-10px); }
     }
-
     /* ===== Form Section ===== */
     .container {
       max-width: 700px;
@@ -154,20 +136,17 @@
       box-shadow: 0 15px 40px rgba(0,0,0,0.07);
       transition: all 0.3s ease;
     }
-
     .container h2 {
       text-align: center;
       margin-bottom: 2rem;
       font-size: 2rem;
       color: #222;
     }
-
     input, textarea, button[type="submit"], label {
       width: 100%;
       margin-bottom: 1rem;
       font-family: "Poppins", sans-serif;
     }
-
     input, textarea {
       padding: 0.9rem 1rem;
       border-radius: 12px;
@@ -175,13 +154,11 @@
       font-size: 1rem;
       transition: all 0.3s ease;
     }
-
     input:focus, textarea:focus {
       border-color: #ff416c;
       outline: none;
       box-shadow: 0 4px 12px rgba(255,65,108,0.25);
     }
-
     button[type="submit"] {
       background: linear-gradient(135deg, #00c6ff, #0072ff);
       border: none;
@@ -194,12 +171,10 @@
       transition: all 0.3s ease;
       box-shadow: 0 10px 25px rgba(0,114,255,0.3);
     }
-
     button[type="submit"]:hover {
       transform: translateY(-4px) scale(1.03);
       box-shadow: 0 15px 35px rgba(0,114,255,0.4);
     }
-
     /* ===== Listings Section ===== */
     #listingsContainer {
       display: grid;
@@ -209,7 +184,6 @@
       max-width: 1200px;
       margin: auto;
     }
-
     .listing-card {
       background: #fff;
       border-radius: 20px;
@@ -219,18 +193,15 @@
       position: relative;
       overflow: hidden;
     }
-
     .listing-card:hover {
       transform: translateY(-12px);
       box-shadow: 0 20px 50px rgba(0,0,0,0.1);
     }
-
     .listing-header {
       display: flex;
       align-items: center;
       margin-bottom: 1rem;
     }
-
     .listing-header img,
     .logo-placeholder {
       width: 60px;
@@ -246,13 +217,11 @@
       margin-right: 12px;
       font-size: 20px;
     }
-
     .listing-body p {
       margin: 5px 0;
       color: #555;
       font-size: 0.95rem;
     }
-
     .listing-footer {
       display: flex;
       justify-content: space-between;
@@ -260,7 +229,6 @@
       margin-top: 1rem;
       font-size: 0.9rem;
     }
-
     .like-btn, .share-btn {
       cursor: pointer;
       border: none;
@@ -269,11 +237,9 @@
       color: #ff416c;
       transition: all 0.3s ease;
     }
-
     .like-btn:hover, .share-btn:hover {
       transform: scale(1.1);
     }
-
     /* ===== Footer ===== */
     footer {
       text-align: center;
@@ -283,13 +249,11 @@
       border-top: 1px solid #eee;
       margin-top: 2rem;
     }
-
     /* ===== Responsive ===== */
     @media (max-width: 768px) {
       .hero h1 {
         font-size: 2rem;
       }
-
       .feature-card {
         max-width: 90%;
       }
@@ -428,6 +392,8 @@
         setTimeout(() => successMsg.style.display = "none", 2000);
       } catch (err) {
         console.error("Error adding listing:", err);
+        successMsg.style.display = "none";
+        alert("An error occurred while adding your listing. Please try again!");
       }
 
       submitBtn.disabled = false;
