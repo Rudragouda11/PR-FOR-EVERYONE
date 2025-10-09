@@ -5,151 +5,200 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PR for Everyone</title>
   <style>
-    /* Google Fonts */
     @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
 
+    /* ===== Base Styles ===== */
     body {
       margin: 0;
       padding: 0;
       font-family: "Poppins", sans-serif;
-      background-color: #f4f6fb;
+      background: #fefefe;
       color: #222;
     }
 
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* ===== Header ===== */
     header {
-      background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
-      color: #fff;
+      position: sticky;
+      top: 0;
+      background: #fff;
+      color: #222;
       text-align: center;
-      padding: 2rem 1rem;
+      padding: 1.5rem 1rem;
       font-size: 2rem;
       font-weight: 700;
       letter-spacing: 1px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      z-index: 100;
     }
 
+    /* ===== Hero Section ===== */
     .hero {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       text-align: center;
-      padding: 3rem 1rem;
-      max-width: 700px;
-      margin: auto;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+      padding: 2rem 1rem;
     }
 
     .hero h1 {
-      font-size: 2rem;
-      color: #222;
+      font-size: 2.5rem;
       margin-bottom: 1rem;
+      color: #222;
+      line-height: 1.2;
     }
 
     .hero p {
-      font-size: 1.1rem;
-      color: #555;
-      margin-bottom: 1.5rem;
+      font-size: 1.2rem;
+      color: #444;
+      margin-bottom: 2rem;
+      max-width: 600px;
     }
 
     .cta {
-      background: linear-gradient(90deg, #2575fc, #6a11cb);
-      color: white;
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: #fff;
+      padding: 1rem 2.5rem;
       border: none;
-      padding: 0.9rem 2rem;
       border-radius: 50px;
       font-weight: 600;
-      cursor: pointer;
       font-size: 1rem;
-      transition: 0.3s;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
     }
 
     .cta:hover {
-      transform: scale(1.05);
-      box-shadow: 0 5px 15px rgba(37, 117, 252, 0.3);
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.2);
     }
 
+    /* ===== Features Section ===== */
     .features {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 1.5rem;
-      padding: 2rem 1rem;
+      padding: 4rem 1rem;
+      background: #f7f8fc;
     }
 
     .feature-card {
       background: #fff;
-      border-radius: 15px;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-      padding: 1.5rem;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      padding: 2rem;
       max-width: 300px;
       text-align: center;
-      transition: 0.3s;
+      transition: all 0.3s ease;
     }
 
     .feature-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      transform: translateY(-10px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.08);
     }
 
     .feature-card h3 {
-      color: #2575fc;
-      margin-bottom: 0.5rem;
+      font-size: 1.3rem;
+      color: #ff6f91;
+      margin-bottom: 0.8rem;
     }
 
+    .feature-card p {
+      color: #555;
+      font-size: 1rem;
+    }
+
+    /* ===== Form Section ===== */
     .container {
       max-width: 700px;
       background: #fff;
-      margin: 3rem auto;
-      border-radius: 15px;
-      padding: 2rem;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      margin: 4rem auto;
+      border-radius: 20px;
+      padding: 3rem;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
     }
 
     .container h2 {
       text-align: center;
+      margin-bottom: 2rem;
+      font-size: 2rem;
       color: #222;
-      margin-bottom: 1rem;
     }
 
-    input,
-    textarea,
-    button {
+    input, textarea, button[type="submit"], label {
       width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      border-radius: 8px;
-      border: 1px solid #ccc;
+      margin-bottom: 1rem;
       font-family: "Poppins", sans-serif;
     }
 
+    input, textarea {
+      padding: 0.9rem 1rem;
+      border-radius: 12px;
+      border: 1px solid #ddd;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    input:focus, textarea:focus {
+      border-color: #4facfe;
+      outline: none;
+      box-shadow: 0 4px 12px rgba(79, 172, 254, 0.25);
+    }
+
     button[type="submit"] {
-      background: linear-gradient(90deg, #2575fc, #6a11cb);
-      color: white;
-      font-weight: 600;
+      background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
       border: none;
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      color: #fff;
+      font-weight: 600;
       cursor: pointer;
-      transition: 0.3s;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
     }
 
     button[type="submit"]:hover {
-      transform: scale(1.05);
-      box-shadow: 0 4px 12px rgba(106, 17, 203, 0.3);
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+    }
+
+    /* ===== Listings ===== */
+    #listingsContainer {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      padding: 3rem 1rem;
+      max-width: 1200px;
+      margin: auto;
     }
 
     .listing-card {
-      background: white;
-      border-radius: 15px;
-      padding: 20px;
-      margin: 20px auto;
-      max-width: 700px;
-      box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
-      transition: 0.3s;
+      background: #fff;
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
     }
 
     .listing-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+      transform: translateY(-10px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.08);
     }
 
     .listing-header {
       display: flex;
       align-items: center;
-      margin-bottom: 10px;
+      margin-bottom: 1rem;
     }
 
     .listing-header img,
@@ -158,50 +207,59 @@
       height: 60px;
       border-radius: 50%;
       object-fit: cover;
-      background: #2575fc;
+      background: #38f9d7;
       color: white;
       font-weight: bold;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-right: 10px;
+      margin-right: 12px;
       font-size: 20px;
     }
 
     .listing-body p {
-      margin: 4px 0;
-      color: #444;
+      margin: 5px 0;
+      color: #555;
+      font-size: 0.95rem;
     }
 
     .listing-footer {
       display: flex;
       justify-content: space-between;
-      margin-top: 10px;
+      align-items: center;
+      margin-top: 1rem;
       font-size: 0.9rem;
     }
 
-    .like-btn,
-    .share-btn {
+    .like-btn, .share-btn {
       cursor: pointer;
-      color: #2575fc;
-      font-weight: 600;
       border: none;
       background: none;
+      font-weight: 600;
+      color: #43e97b;
+      transition: all 0.3s ease;
     }
 
+    .like-btn:hover, .share-btn:hover {
+      transform: scale(1.1);
+    }
+
+    /* ===== Footer ===== */
     footer {
       text-align: center;
       padding: 2rem 0;
       color: #777;
       background: #f9f9f9;
-      border-top: 1px solid #ddd;
+      border-top: 1px solid #eee;
       margin-top: 2rem;
     }
 
+    /* ===== Responsive ===== */
     @media (max-width: 768px) {
       .hero h1 {
-        font-size: 1.5rem;
+        font-size: 2rem;
       }
+
       .feature-card {
         max-width: 90%;
       }
@@ -213,15 +271,15 @@
   <header>PR for Everyone</header>
 
   <section class="hero">
-    <h1>Search, Connect, and Grow Your Brand Visibility</h1>
-    <p>Discover PR agencies and influencers tailored to your goals. Simple, powerful, and open for everyone.</p>
+    <h1>Discover & Connect with Top PR Services</h1>
+    <p>Find verified agencies and influencers to grow your brand. Simple, powerful, and designed for everyone.</p>
     <button class="cta" onclick="window.location.href='browse.html'">Explore PR Services</button>
   </section>
 
   <section class="features">
     <div class="feature-card">
       <h3>For Businesses</h3>
-      <p>Find verified PR professionals who can promote your brand effectively.</p>
+      <p>Find verified PR professionals to promote your brand effectively.</p>
     </div>
     <div class="feature-card">
       <h3>For Influencers</h3>
@@ -229,7 +287,7 @@
     </div>
     <div class="feature-card">
       <h3>For Everyone</h3>
-      <p>Search, filter, and connect — it’s PR made simple for all!</p>
+      <p>Search, filter, and connect — PR made simple for all!</p>
     </div>
   </section>
 
@@ -251,13 +309,10 @@
 
   <footer>© 2025 PR for Everyone. All rights reserved.</footer>
 
-  <!-- Firebase Script (Same logic retained) -->
+  <!-- Firebase Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
-    import {
-      getFirestore, collection, addDoc, query, orderBy, onSnapshot,
-      serverTimestamp, doc, getDoc, updateDoc
-    } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
     import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-storage.js";
 
     const firebaseConfig = {
